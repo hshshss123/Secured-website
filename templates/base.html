@@ -1,32 +1,27 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Local ethical hacking practice laboratory">
-  <title>{% block title %}Secured Lab{% endblock %}</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Local ethical hacking practice laboratory">
+<title>{% block title %}Secured Lab{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 <header class="topbar">
-  <a class="brand" href="{{ url_for('index') }}"><span class="brand-dot"></span> SECURED<span class="muted">LAB</span></a>
-  <nav>
-    <a href="{{ url_for('labs') }}">Labs</a>
-    {% if user %}
-      <a href="{{ url_for('dashboard') }}">Dashboard</a>
-      <form class="inline" method="post" action="{{ url_for('logout') }}">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        <button class="nav-button" type="submit">Logout</button>
-      </form>
-    {% else %}
-      <a href="{{ url_for('login') }}">Login</a>
-      <a class="nav-cta" href="{{ url_for('register') }}">Register</a>
-    {% endif %}
-  </nav>
+<a class="brand" href="{{ url_for('index') }}"><span class="brand-dot"></span> SECURED<span class="muted">LAB</span></a>
+<nav>
+<a href="{{ url_for('labs') }}">Labs</a>
+<a href="{{ url_for('github_search') }}">GitHub</a>
+{% if user %}
+<a href="{{ url_for('terminal') }}">Terminal</a>
+<a href="{{ url_for('dashboard') }}">Dashboard</a>
+<form class="inline" method="post" action="{{ url_for('logout') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="nav-button" type="submit">Logout</button></form>
+{% else %}
+<a href="{{ url_for('login') }}">Login</a><a class="nav-cta" href="{{ url_for('register') }}">Register</a>
+{% endif %}
+</nav>
 </header>
-<main class="container">
-{% block content %}{% endblock %}
-</main>
+<main class="container">{% block content %}{% endblock %}</main>
 <footer>Local security laboratory · Test only systems you own or are authorized to assess.</footer>
 </body>
 </html>
