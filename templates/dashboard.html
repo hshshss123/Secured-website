@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · Secured Lab{% endblock %}
+{% block content %}
+<div class="page-head"><div><div class="eyebrow">OPERATOR DASHBOARD</div><h1>Welcome, {{ user.username }}</h1></div><a class="button ghost" href="{{ url_for('labs') }}">Practice labs</a></div>
+<section class="grid two">
+  <div class="card">
+    <h2>Create a test note</h2>
+    <p class="muted">Use harmless strings and observe how the server handles them.</p>
+    <form method="post" action="{{ url_for('create_note') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <label>Title<input name="title" required maxlength="120"></label>
+      <label>Body<textarea name="body" required maxlength="5000" rows="6"></textarea></label>
+      <button class="button primary" type="submit">Save note</button>
+    </form>
+  </div>
+  <div class="card">
+    <h2>Quick API</h2>
+    <p class="muted">Inspect these endpoints with your browser or an intercepting proxy.</p>
+    <code class="block">GET /api/me</code>
+    <code class="block">GET /api/notes</code>
+    <code class="block">GET /search?q=test</code>
+  </div>
+</section>
+<section class="card">
+  <div class="section-head"><h2>Your notes</h2><span class="badge">{{ notes|length }} stored</span></div>
+  {% if notes %}
+  <div class="notes">
+    {% for note in notes %}
+    <article class="note"><div><h3>{{ note.title }}</h3><p>{{ note.body }}</p></div>
+      <form method="post" action="{{ url_for('delete_note', note_id=note.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="danger" type="submit">Delete</button>
+      </form>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}<p class="muted">No notes yet.</p>{% endif %}
+</section>
+{% endblock %}
