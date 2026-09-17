@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Labs · Secured Lab{% endblock %}
+{% block content %}
+<div class="page-head"><div><div class="eyebrow">TRAINING PATH</div><h1>Practice labs</h1><p class="muted">The application is hardened by default. Your task is to verify the controls rather than attack unrelated systems.</p></div></div>
+<div class="labs">
+{% for n,title,diff,desc in [
+(1,"Reconnaissance","Easy","Enumerate the visible routes. Record HTTP verbs, status codes, cookies and response headers."),
+(2,"Authentication","Easy","Observe failed and successful login behavior. Check whether sessions are rotated after login."),
+(3,"Input validation","Easy","Probe the search and note inputs using benign boundary strings. Look for unexpected parsing or reflection."),
+(4,"Authorization","Medium","Create two accounts and verify that notes and API responses cannot cross user boundaries."),
+(5,"CSRF","Medium","Inspect every state-changing form and identify how the server validates request origin."),
+(6,"Session security","Medium","Inspect Set-Cookie attributes and test logout/session invalidation in your local browser."),
+(7,"API enumeration","Medium","Map the documented API surface and compare authenticated vs unauthenticated responses."),
+(8,"Security headers","Hard","Inspect the response headers and explain what each browser-side control mitigates.")
+] %}
+<article class="lab-row"><div class="lab-num">{{ "%02d"|format(n) }}</div><div><span class="badge">{{ diff }}</span><h2>{{ title }}</h2><p>{{ desc }}</p></div><span class="arrow">→</span></article>
+{% endfor %}
+</div>
+<div class="warning"><strong>Lab boundary:</strong> keep testing on <code>127.0.0.1</code> or another environment you explicitly control. Do not deploy this as an internet-facing target.</div>
+{% endblock %}
