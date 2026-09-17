@@ -11,10 +11,9 @@ services:
   terminal:
     build:
       context: .
-      dockerfile: terminal.Dockerfile
-    image: securedlab-terminal:latest
+      dockerfile: terminal-service.Dockerfile
     environment:
-      TERMINAL_HOST: 127.0.0.1
+      TERMINAL_HOST: 0.0.0.0
       TERMINAL_PORT: 7681
       TERMINAL_SECRET: ${TERMINAL_SECRET}
       TERMINAL_IMAGE: securedlab-terminal:latest
@@ -23,7 +22,6 @@ services:
       - "127.0.0.1:7681:7681"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    command: ["node", "terminal-server.js"]
     restart: unless-stopped
 
 networks:
