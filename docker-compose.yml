@@ -8,6 +8,14 @@ services:
       - "8080"
     restart: "no"
 
+  terminal-image:
+    build:
+      context: .
+      dockerfile: terminal.Dockerfile
+    image: securedlab-terminal:latest
+    command: ["/bin/true"]
+    restart: "no"
+
   terminal:
     build:
       context: .
@@ -22,6 +30,9 @@ services:
       - "127.0.0.1:7681:7681"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      terminal-image:
+        condition: service_completed_successfully
     restart: unless-stopped
 
 networks:
