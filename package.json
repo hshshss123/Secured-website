@@ -1,0 +1,10 @@
+{
+  "name": "secured-lab-terminal",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Isolated browser terminal backend for Secured Lab",
+  "main": "terminal-server.js",
+  "scripts": {"start": "node terminal-server.js"},
+  "engines": {"node": ">=20"},
+  "dependencies": {"node-pty": "^1.1.0", "ws": "^8.18.3"}
+}
