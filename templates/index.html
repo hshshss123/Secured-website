@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Secured Lab{% endblock %}
+{% block content %}
+<section class="hero">
+  <div>
+    <div class="eyebrow">AUTHORIZED SECURITY TRAINING</div>
+    <h1>Learn to break.<br><span>Learn to secure.</span></h1>
+    <p>A realistic Flask application for practicing web reconnaissance, authentication testing, access-control checks, input validation and API security in a controlled local environment.</p>
+    <div class="actions">
+      <a class="button primary" href="{{ url_for('labs') }}">View practice labs →</a>
+      {% if not user %}<a class="button ghost" href="{{ url_for('login') }}">Sign in</a>{% endif %}
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-head"><span></span><span></span><span></span><b>security-console</b></div>
+    <pre>$ scope --target 127.0.0.1
+TARGET     local-lab
+AUTH       authorized
+MODE       defensive
+STATUS     <strong>READY</strong>
+
+$ checks --headers
+CSP        enabled
+CSRF       enabled
+SQLi       parameterized
+SESSION    HttpOnly / SameSite
+ACCESS     ownership enforced
+
+$ lab status
+8 exercises available
+_</pre>
+  </div>
+</section>
+<section class="grid three">
+  <article class="card"><div class="icon">01</div><h3>Recon</h3><p>Map routes, HTTP methods, cookies and security headers.</p></article>
+  <article class="card"><div class="icon">02</div><h3>Web App</h3><p>Test authentication, authorization and input-handling boundaries.</p></article>
+  <article class="card"><div class="icon">03</div><h3>API</h3><p>Inspect JSON responses and verify that object access stays scoped to the logged-in user.</p></article>
+</section>
+{% endblock %}
