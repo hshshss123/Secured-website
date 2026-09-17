@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Search · Secured Lab{% endblock %}
+{% block content %}
+<div class="page-head"><div><div class="eyebrow">INPUT HANDLING</div><h1>Search</h1></div></div>
+<form class="searchbar" method="get">
+  <input name="q" value="{{ term }}" placeholder="Search your notes…" maxlength="100">
+  <button class="button primary">Search</button>
+</form>
+<div class="card">
+{% if results %}
+  {% for note in results %}<article class="note"><div><h3>{{ note.title }}</h3><p>{{ note.body }}</p></div></article>{% endfor %}
+{% elif term %}<p>No results for <strong>{{ term }}</strong>.</p>{% else %}<p class="muted">Enter a search term.</p>{% endif %}
+</div>
+{% endblock %}
