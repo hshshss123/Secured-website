@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}GitHub Search · Secured Lab{% endblock %}
+{% block content %}
+<div class="page-head"><div><div class="eyebrow">REPOSITORY INTELLIGENCE</div><h1>GitHub Search</h1><p class="muted">Search public repositories using GitHub's API.</p></div></div>
+<form class="searchbar" id="repo-form"><input id="repo-q" placeholder="web security flask language:python" maxlength="256" required><button class="button primary">Search</button></form>
+<div id="repo-meta" class="muted"></div><div id="repo-results"></div>
+<script>
+document.getElementById('repo-form').addEventListener('submit', async e => {
+ e.preventDefault(); const q=document.getElementById('repo-q').value.trim(), box=document.getElementById('repo-results'), meta=document.getElementById('repo-meta');
+ box.innerHTML='<div class="card">Searching GitHub…</div>';
+ try {
+  const r=await fetch('/api/github/repos?q='+encodeURIComponent(q)); const data=await r.json();
+  if(!r.ok)throw new Error(data.error||'Search failed');
+  meta.textContent=data.total_count+' matching repositories · page '+data.page;
+  box.innerHTML=data.items.map(x=>'<article class="card repo"><div><span class="badge">'+escapeHtml(x.language||'unknown')+'</span><h2>'+escapeHtml(x.full_name)+'</h2><p>'+escapeHtml(x.description||'No description')+'</p><small>★ '+x.stargazers_count+' · updated '+x.updated_at.slice(0,10)+'</small></div><a class="button ghost" target="_blank" rel="noopener noreferrer" href="'+x.html_url+'">Open ↗</a></article>').join('');
+ } catch(err){box.innerHTML='<div class="alert">'+escapeHtml(err.message)+'</div>';}
+});
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+</script>
+{% endblock %}
