@@ -1,0 +1,32 @@
+services:
+  target:
+    build: ./lab-target
+    container_name: securedlab-target
+    networks:
+      - labnet
+    expose:
+      - "8080"
+    restart: "no"
+
+  terminal:
+    build:
+      context: .
+      dockerfile: terminal.Dockerfile
+    image: securedlab-terminal:latest
+    environment:
+      TERMINAL_HOST: 127.0.0.1
+      TERMINAL_PORT: 7681
+      TERMINAL_SECRET: ${TERMINAL_SECRET}
+      TERMINAL_IMAGE: securedlab-terminal:latest
+      LAB_NETWORK: securedlab_labnet
+    ports:
+      - "127.0.0.1:7681:7681"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: ["node", "terminal-server.js"]
+    restart: unless-stopped
+
+networks:
+  labnet:
+    name: securedlab_labnet
+    internal: true
