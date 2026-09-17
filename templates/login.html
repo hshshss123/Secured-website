@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Login · Secured Lab{% endblock %}
+{% block content %}
+<div class="auth-wrap">
+  <div class="auth-card">
+    <div class="eyebrow">AUTHENTICATION</div><h1>Sign in</h1>
+    <p class="muted">Use the demo account or create your own local test account.</p>
+    {% if error %}<div class="alert">{{ error }}</div>{% endif %}
+    <form method="post">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <label>Username<input name="username" autocomplete="username" required maxlength="40"></label>
+      <label>Password<input type="password" name="password" autocomplete="current-password" required></label>
+      <button class="button primary full" type="submit">Authenticate</button>
+    </form>
+    <div class="demo">Demo: <code>demo</code> / <code>DemoPass!2026</code></div>
+    <p class="small">No real credentials should ever be placed in this repository.</p>
+  </div>
+</div>
+{% endblock %}
