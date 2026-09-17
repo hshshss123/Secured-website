@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Terminal · Secured Lab{% endblock %}
+{% block content %}
+<div class="terminal-page">
+  <div class="page-head">
+    <div><div class="eyebrow">ISOLATED LINUX TERMINAL</div><h1>Browser Terminal</h1><p class="muted">Disposable container · internal lab network · target: <code>http://target:8080</code></p></div>
+    <div class="terminal-status"><span></span> READY</div>
+  </div>
+  <div class="terminal-shell"><div id="web-terminal"></div></div>
+  <div class="terminal-help"><strong>Try:</strong> <code>curl http://target:8080/</code> · <code>nmap target</code> · <code>curl http://target:8080/headers</code></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@xterm/xterm@5.3.0/lib/xterm.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xterm/xterm@5.3.0/css/xterm.min.css">
+<script>
+(() => {
+  const term = new Terminal({cursorBlink:true, convertEol:true, fontFamily:'ui-monospace, SFMono-Regular, Consolas, monospace', fontSize:14, theme:{background:'#06100e',foreground:'#d7ebe5',cursor:'#49e39b'}});
+  term.open(document.getElementById('web-terminal'));
+  const ws = new WebSocket('{{ terminal_ws }}?token={{ terminal_token }}');
+  const fit = () => { if (ws.readyState === 1) ws.send(JSON.stringify({type:'resize',cols:term.cols,rows:term.rows})); };
+  ws.onopen = () => { term.writeln('\r\n[+] Connected to disposable lab container.'); fit(); };
+  ws.onmessage = e => { const m=JSON.parse(e.data); if(m.type==='output')term.write(m.data); else if(m.type==='status')term.writeln('\r\n[lab] '+m.message+'\r\n'); else if(m.type==='error')term.writeln('\r\n[error] '+m.message+'\r\n'); };
+  ws.onclose = () => term.writeln('\r\n[lab] Terminal disconnected.');
+  term.onData(data => { if(ws.readyState===1)ws.send(JSON.stringify({type:'input',data})); });
+  window.addEventListener('resize', fit);
+})();
+</script>
+{% endblock %}
