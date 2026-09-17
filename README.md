@@ -1,55 +1,77 @@
-# Secured Website — Ethical Hacking Lab
+# Secured Lab
 
-A deliberately self-contained web application for **authorized security practice**. Run it locally only.
+A local ethical-hacking practice platform with a modern Flask GUI, authenticated dashboard, browser terminal, internal training target, and GitHub repository search.
 
-## Features
-- Modern responsive security-dashboard UI
-- Registration and login
-- Session-based authentication
-- Profile page
-- Search endpoint
-- Notes/comments
-- JSON API
-- Security headers
-- CSRF protection
-- Password hashing
-- SQLite database
-- Built-in lab guide with safe challenge targets
+## What is included
 
-## Run locally
+- Flask web application
+- Login/registration with password hashing
+- CSRF protection and security headers
+- User-scoped notes and API
+- Browser terminal using xterm.js + node-pty
+- Disposable Debian terminal containers
+- Internal Docker lab network
+- Safe internal training target
+- GitHub public repository search
+- 8 guided security exercises
 
-```bash
-python -m venv .venv
-# Windows
-.venv\\Scripts\\activate
-# Linux/macOS
-source .venv/bin/activate
-pip install -r requirements.txt
-python app.py
-```
+The browser terminal architecture uses xterm.js for terminal rendering and node-pty for the PTY. node-pty recommends putting server-launched PTYs inside containers when the server is exposed. Docker provides namespaces/cgroups and capability controls for container isolation.
 
-Open http://127.0.0.1:5000
+## Important safety requirement
 
-Default demo account is created automatically:
-- username: `demo`
-- password: `DemoPass!2026`
+The terminal service mounts the Docker socket because it must create disposable terminal containers. Docker documents that access to the Docker daemon is powerful and should be restricted. Run this project only on a dedicated lab machine or VM and never expose port 7681 or the Docker socket to the Internet.
 
-Change it before exposing the application anywhere.
+The compose lab network is internal and the training target has no published host port.
 
-## Practice areas
+## Run the web application
 
-Use the app as a target you own. Suggested exercises:
-1. Recon: identify routes, methods, cookies and headers.
-2. Authentication: inspect login/session behavior.
-3. Input handling: test search and note fields with harmless payloads.
-4. Access control: verify that users cannot read or modify another user's data.
-5. CSRF: inspect form protections.
-6. Session security: inspect cookie attributes and session lifecycle.
-7. API testing: enumerate documented API endpoints.
-8. Security headers: inspect CSP, HSTS (when HTTPS is used), X-Content-Type-Options, Referrer-Policy and frame protections.
+Python:
 
-This project is intentionally designed to be **defensive by default**. It does not contain intentionally exploitable remote-code-execution, command-injection, credential-stealing, or malware functionality.
+    python -m venv .venv
+    source .venv/bin/activate
+    pip install -r requirements.txt
 
-## Scope
+Create local secrets:
 
-Only test this application on systems you own or have explicit permission to assess.
+    cp .env.example .env
+
+Set SECRET_KEY and TERMINAL_SECRET to long random values.
+
+Start Flask:
+
+    python app.py
+
+Open:
+
+    http://127.0.0.1:5000
+
+## Run the terminal/lab infrastructure
+
+Requirements:
+
+- Docker Engine + Docker Compose
+- Linux is recommended for the full Docker lab
+
+Build and start:
+
+    docker compose --env-file .env up --build
+
+The terminal service listens only on:
+
+    127.0.0.1:7681
+
+Then sign in to the web application and open Terminal.
+
+## GitHub search
+
+The GitHub page uses the GitHub REST API. GitHub search is rate-limited; there is no technically unlimited public GitHub search. The application supports normal pagination and optionally accepts a server-side GITHUB_TOKEN for authenticated API requests. Never put a GitHub token in browser JavaScript or commit it to the repository.
+
+## Android / Termux
+
+The Flask portion runs in Termux. The full browser-terminal Docker architecture requires a Docker-capable Linux host. Standard Android/Termux is not a replacement for a Docker Engine host, so use the web application in Termux and run the full lab infrastructure on a Linux VM/PC.
+
+## Lab scope
+
+The internal target is deliberately safe and does not execute arbitrary SQL, HTML, commands, or uploads. It provides training endpoints and clues so you can practice reconnaissance, HTTP analysis, headers, API inspection and secure coding without publishing a remotely exploitable target.
+
+Only test systems you own or have explicit permission to assess.
