@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Register · Secured Lab{% endblock %}
+{% block content %}
+<div class="auth-wrap">
+  <div class="auth-card">
+    <div class="eyebrow">CREATE TEST ACCOUNT</div><h1>Register</h1>
+    {% if error %}<div class="alert">{{ error }}</div>{% endif %}
+    <form method="post">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <label>Username<input name="username" autocomplete="username" required minlength="3" maxlength="40"></label>
+      <label>Password<input type="password" name="password" autocomplete="new-password" required minlength="12"></label>
+      <button class="button primary full" type="submit">Create account</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
